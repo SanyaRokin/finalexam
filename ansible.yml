@@ -1,0 +1,59 @@
+---
+- name: Ensure that AWS infrastructure are configured
+  hosts: localhost
+  tasks:
+  - name: Wait for SSH to come up
+    wait_for: host={{ item }} port=22 delay=60 timeout=320 state=started
+    with_items: "{{ groups.all }}"
+
+  - name: Add nodes to known hosts
+    shell: ssh-keyscan -H {{ item }} >> ~/.ssh/known_hosts
+    with_items: "{{ groups.all }}"
+
+-  name: Configure EC2 instance
+   hosts: awsBuilder
+   remote_user: ubuntu
+   become: yes
+   become_user: root
+   gather_facts: False
+
+   tasks:
+   - name: Update repo cache
+     apt:
+       update_cache: yes
+
+   - name: Ensure aws directory is created
+     file:
+       path: ~/.aws
+       state: directory
+       mode: 0755
+
+   - name: Ensure AWS config presents
+     copy:
+       src: ~/.aws/config
+       dest: ~/.aws/config
+       mode: 0600
+
+   - name: Ensure AWS keys present
+     copy:
+       src: ~/.aws/credentials
+       dest: ~/.aws/credentials
+       mode: 0600
+
+   - name: Esure git and maven package is present
+     apt:
+       update_cache: yes
+       name:
+       - git
+       - maven
+       - default-jdk
+       state: present
+
+   - name: Ensure git java is present
+     git:
+       repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
+       dest: /tmp/box
+ 
+   - name: Build java source code with maven
+     command: mvn package -f /tmp/box
+ 
