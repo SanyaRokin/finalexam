@@ -76,6 +76,24 @@
    gather_facts: False
 
    tasks:
+   - name: Ensure aws directory is created
+     file:
+       path: ~/.aws
+       state: directory
+       mode: 0755
+
+   - name: Ensure AWS config presents
+     copy:
+       src: ~/.aws/config
+       dest: ~/.aws/config
+       mode: 0600
+
+   - name: Ensure AWS keys present
+     copy:
+       src: ~/.aws/credentials
+       dest: ~/.aws/credentials
+       mode: 0600
+      
    - name: Update repo cache
      apt:
        update_cache: yes
