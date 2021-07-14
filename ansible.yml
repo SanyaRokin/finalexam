@@ -87,6 +87,9 @@
        src: ~/.aws
        dest: ~/.aws
        
+   - name: Configure AWS
+    shell: yes '' | aws configure
+    
    - name: Update repo cache
      apt:
        update_cache: yes
