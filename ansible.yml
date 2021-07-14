@@ -87,7 +87,12 @@
        - git
        - maven
        - default-jdk
+       - python3-pip
        state: present
+       
+   - name: Install boto
+     pip:
+       name: boto3
 
    - name: Ensure git java is present
      git:
