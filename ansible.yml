@@ -104,8 +104,8 @@
  
    - name: Copy artefact to bucket
      amazon.aws.aws_s3:
-       aws_access_key: $AWS_ACCESS_KEY_ID
-       aws_secret_key: $AWS_SECRET_ACCESS_KEY
+       aws_access_key: "{{ lookup('environment', 'AWS_ACCESS_KEY_ID') }}"
+       aws_secret_key: "{{ lookup('environment', 'AWS_SECRET_ACCESS_KEY') }}"
        bucket: finalexambucket777
        object: hello-1.0.war
        src: /tmp/box/target/hello-1.0.war
