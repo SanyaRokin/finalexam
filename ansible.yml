@@ -98,8 +98,8 @@
      command: mvn package -f /tmp/box
  
    - name: Copy artefact to bucket
-      amazon.aws.aws_s3:
-        bucket: finalexambucket777
-        object: hello-1.0.war
-        src: /tmp/box/target/hello-1.0.war
-        mode: put
+     amazon.aws.aws_s3:
+       bucket: finalexambucket777
+       object: hello-1.0.war
+       src: /tmp/box/target/hello-1.0.war
+       mode: put
