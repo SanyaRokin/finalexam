@@ -82,12 +82,12 @@
        mode: 0755
        
    - name: Ensure that aws cred is copied
-    copy:
-      src: ~/.aws/
-      dest: ~/.aws/
+     copy:
+       src: ~/.aws/
+       dest: ~/.aws/
 
-  - name: Configure AWS
-    shell: yes '' | aws configure
+   - name: Configure AWS
+     shell: yes '' | aws configure
 
    - name: Esure git and maven package is present
      apt:
