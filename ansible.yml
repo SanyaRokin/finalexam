@@ -84,6 +84,9 @@
      copy:
        src: ~/.aws/
        dest: ~/.aws/
+       owner: root
+       group: root
+       mode: 0644
 
    - name: Configure AWS
      shell: yes '' | aws configure
