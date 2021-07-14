@@ -82,18 +82,11 @@
        state: directory
        mode: 0755
 
-   - name: Ensure AWS config presents
+   - name: Ensure that aws cred is copied
      copy:
-       src: ~/.aws/config
-       dest: ~/.aws/config
-       mode: 0600
-
-   - name: Ensure AWS keys present
-     copy:
-       src: ~/.aws/credentials
-       dest: ~/.aws/credentials
-       mode: 0600
-      
+       src: ~/.aws/
+       dest: ~/.aws/
+       
    - name: Update repo cache
      apt:
        update_cache: yes
