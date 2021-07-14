@@ -76,6 +76,17 @@
    gather_facts: False
 
    tasks:
+   - name: Set AWS KEY ID
+     set_fact: aws_key_id="{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
+     delegate_to: 127.0.0.1
+   - name: Set AWS SECRET
+     set_fact: aws_secret_key="{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"
+     delegate_to: 127.0.0.1
+   - name: Get AWS KEY ID
+     set_fact: aws_key_id={{hostvars[inventory_hostname]['aws_key_id']}}
+   - name: Get AWS SECRET KEY
+     set_fact: aws_secret_key={{hostvars[inventory_hostname]['aws_secret_key']}}
+    
    - name: Update repo cache
      apt:
        update_cache: yes
@@ -104,8 +115,8 @@
  
    - name: Copy artefact to bucket
      amazon.aws.aws_s3:
-       aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
-       aws_secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
+       aws_access_key={{aws_key_id}}
+       aws_secret_key={{aws_secret_key}}
        bucket: finalexambucket777
        object: hello-1.0.war
        src: /tmp/box/target/hello-1.0.war
