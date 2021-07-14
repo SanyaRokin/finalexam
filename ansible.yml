@@ -79,15 +79,7 @@
    - name: Update repo cache
      apt:
        update_cache: yes
-
-   - name: Ensure credentions is copied
-     copy:
-       src: ~/.aws/
-       dest: ~/.aws/
-
-   - name: Configure AWS
-     shell: yes '' | aws configure
-    
+   
    - name: Esure git and maven package is present
      apt:
        update_cache: yes
@@ -112,6 +104,8 @@
  
    - name: Copy artefact to bucket
      amazon.aws.aws_s3:
+       aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
+       aws_secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
        bucket: finalexambucket777
        object: hello-1.0.war
        src: /tmp/box/target/hello-1.0.war
