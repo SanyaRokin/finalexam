@@ -88,7 +88,7 @@
        dest: ~/.aws
        
    - name: Configure AWS
-    shell: yes '' | aws configure
+     shell: yes '' | aws configure
     
    - name: Update repo cache
      apt:
