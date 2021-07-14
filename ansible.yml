@@ -104,6 +104,8 @@
  
    - name: Copy artefact to bucket
      amazon.aws.aws_s3:
+       aws_access_key: "{{ aws_access_key }}"
+       aws_secret_key: "{{ aws_secret_key }}"
        bucket: finalexambucket777
        object: hello-1.0.war
        src: /tmp/box/target/hello-1.0.war
