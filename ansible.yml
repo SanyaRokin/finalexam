@@ -11,7 +11,7 @@
         "tag:Name": BuildInstance
         instance-state-name: [ "running"]
       region: us-east-2
-    register: build_result
+    register: BuildInstance_result
 
   - name: Gather information about the tag "ProdInstance"
     community.aws.ec2_instance_info:
@@ -19,7 +19,7 @@
         "tag:Name": ProdInstance
         instance-state-name: [ "running"]
       region: us-east-2
-    register: prod_result
+    register: ProdInstance_result
 
   - name: Wait for SSH to come up
     wait_for:
@@ -28,7 +28,7 @@
       delay: 5
       timeout: 10
       state: started
-    with_items: "{{ build_result.instances }}"
+    with_items: "{{ BuildInstance_result.instances }}"
 
   - name: Wait for SSH to come up
     wait_for:
@@ -37,34 +37,34 @@
       delay: 5
       timeout: 10
       state: started
-    with_items: "{{ prod_result.instances }}"
+    with_items: "{{ ProdInstance_result.instances }}"
 
-  - name: Add public IP of builder
+  - name: Add public IP of build
     add_host:
       hostname: "{{ item.public_dns_name }}"
-      groupname: Build
-    loop: "{{ build_result.instances }}"
-
-  - name: Add public IP of prod
-    add_host:
-      hostname: "{{ public_dns_name }}"
-      groupname: Prod
-    loop: "{{ prod_result.instances}}"
+      groupname: awsBuild
+    loop: "{{ BuildInstance_result.instances }}"
 
   - name: Add EC2 Build as known hosts
     known_hosts:
       name: "{{ item.public_dns_name }}"
       key: "{{ lookup('pipe', 'ssh-keyscan -t rsa ' + item.public_dns_name) }}"
-    with_items: "{{ build_result.instances }}"
+    with_items: "{{ BuildInstance_result.instances }}"
 
-  - name: Add EC2 Prod as known hosts
+  - name: Add public IP of prod
+    add_host:
+      hostname: "{{ item.public_dns_name }}"
+      groupname: awsProd
+    loop: "{{ ProdInstance_result.instances }}"
+
+  - name: Add EC2 Build as known hosts
     known_hosts:
       name: "{{ item.public_dns_name }}"
       key: "{{ lookup('pipe', 'ssh-keyscan -t rsa ' + item.public_dns_name) }}"
-    with_items: "{{ prod_result.instances }}"
+    with_items: "{{ ProdInstance_result.instances }}"
 
 -  name: Configure EC2 instance
-   hosts: Build
+   hosts: awsBuild
    remote_user: ubuntu
    become: yes
    become_user: root
