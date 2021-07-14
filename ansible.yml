@@ -47,7 +47,7 @@
 
   - name: Add public IP of prod
     add_host:
-      hostname: "{{ item.public_dns_name }}"
+      hostname: "{{ public_dns_name }}"
       groupname: Prod
     loop: "{{ prod_result.instances}}"
 
@@ -57,14 +57,14 @@
       key: "{{ lookup('pipe', 'ssh-keyscan -t rsa ' + item.public_dns_name) }}"
     with_items: "{{ build_result.instances }}"
 
-  - name: Add EC2 awsProd as known hosts
+  - name: Add EC2 Prod as known hosts
     known_hosts:
       name: "{{ item.public_dns_name }}"
       key: "{{ lookup('pipe', 'ssh-keyscan -t rsa ' + item.public_dns_name) }}"
     with_items: "{{ prod_result.instances }}"
 
 -  name: Configure EC2 instance
-   hosts: BuildInstance
+   hosts: Build
    remote_user: ubuntu
    become: yes
    become_user: root
