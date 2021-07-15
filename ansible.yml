@@ -106,7 +106,7 @@
        dest: /tmp/box/
        owner: root
        group: root
-       mode: '0777'
+       mode: '0644'
 
    - name: build container image
      docker_image:
