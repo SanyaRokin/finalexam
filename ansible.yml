@@ -102,7 +102,7 @@
  
    - name: copy Dockerfile
      copy:
-       src: ./dockerfile
+       src: ./Dockerfile
        dest: /tmp/box/
        owner: root
        group: root
