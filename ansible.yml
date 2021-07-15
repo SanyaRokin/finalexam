@@ -83,8 +83,14 @@
        - maven
        - default-jdk
        - docker.io
+       - python3-pip
        state: present
-             
+   
+   - name: Ensure pip packages is present
+     pip:
+       name: 
+       - docker-py
+            
    - name: Ensure git java is present
      git:
        repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
