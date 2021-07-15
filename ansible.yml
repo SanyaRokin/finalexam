@@ -62,12 +62,7 @@
       name: "{{ item.public_dns_name }}"
       key: "{{ lookup('pipe', 'ssh-keyscan -t rsa ' + item.public_dns_name) }}"
     with_items: "{{ ProdInstance_result.instances }}"
-    
-  - name: Creating a new bucket
-    amazon.aws.s3_bucket:
-      name: finalexambucket777
-      state: present
-      
+         
   - name: Set privileges for jenkins .aws
     command:
       argv:
@@ -89,25 +84,7 @@
        path: ~/.aws
        state: directory
        mode: 0755
-
-   - name: Ensure aws directory is created
-     file:
-       path: ~/.aws
-       state: directory
-       mode: 0755
-
-   - name: Ensure AWS config presents
-     copy:
-       src: ~/.aws/config
-       dest: ~/.aws/config
-       mode: 0600
-
-   - name: Ensure AWS keys present
-     copy:
-       src: ~/.aws/credentials
-       dest: ~/.aws/credentials
-       mode: 0600
-    
+ 
    - name: Update repo cache
      apt:
        update_cache: yes
@@ -119,13 +96,8 @@
        - git
        - maven
        - default-jdk
-       - python3-pip
        state: present
        
-   - name: Install boto
-     pip:
-       name: boto3
-
    - name: Ensure git java is present
      git:
        repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
@@ -134,9 +106,27 @@
    - name: Build java source code with maven
      command: mvn package -f /tmp/box
  
-   - name: Copy artefact to bucket
-     amazon.aws.aws_s3:
-       bucket: finalexambucket777
-       object: hello-1.0.war
-       src: /tmp/box/target/hello-1.0.war
-       mode: put
+   - name: copy Dockerfile
+      copy:
+        src: ./
+        dest: /tmp/box/
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: build container image
+      docker_image:
+        name: prod:1.0
+        build_path: /tmp/box
+
+    - name: archive container image as a tarball
+      docker_image:
+        name: myapp:1.0
+        archive_path: /tmp/prod:1.0.tar
+        source: pull
+        state: present
+        timeout: 600
+    - name: Copy .tar file from remote host to local host
+      synchronize:  src={{ item }} dest=./ mode=pull
+      with_items:
+       - "/tmp/prod:1.0.tar"
