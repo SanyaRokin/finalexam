@@ -62,15 +62,7 @@
       name: "{{ item.public_dns_name }}"
       key: "{{ lookup('pipe', 'ssh-keyscan -t rsa ' + item.public_dns_name) }}"
     with_items: "{{ ProdInstance_result.instances }}"
-         
-  - name: Set privileges for jenkins .aws
-    command:
-      argv:
-        - cp /root/.ssh/id_rsa /var/lib/jenkins/.ssh
-        - cp -r /root/.aws /var/lib/jenkins
-        - chown jenkins:jenkins ~/.ssh/id_rsa
-        - chown -R jenkins:jenkins ~/.aws
-      
+              
 -  name: Configure EC2 instance
    hosts: awsBuild
    remote_user: ubuntu
@@ -79,12 +71,6 @@
    gather_facts: False
 
    tasks:
-   - name: Ensure aws directory is created
-     file:
-       path: ~/.aws
-       state: directory
-       mode: 0755
- 
    - name: Update repo cache
      apt:
        update_cache: yes
@@ -107,26 +93,26 @@
      command: mvn package -f /tmp/box
  
    - name: copy Dockerfile
-      copy:
-        src: ./
-        dest: /tmp/box/
-        owner: root
-        group: root
-        mode: '0644'
+     copy:
+       src: ./
+       dest: /tmp/box/
+       owner: root
+       group: root
+       mode: '0644'
 
-    - name: build container image
-      docker_image:
-        name: prod:1.0
-        build_path: /tmp/box
+   - name: build container image
+     docker_image:
+       name: prod:1.0
+       build_path: /tmp/box
 
-    - name: archive container image as a tarball
-      docker_image:
-        name: myapp:1.0
-        archive_path: /tmp/prod:1.0.tar
-        source: pull
-        state: present
-        timeout: 600
-    - name: Copy .tar file from remote host to local host
-      synchronize:  src={{ item }} dest=./ mode=pull
-      with_items:
-       - "/tmp/prod:1.0.tar"
+   - name: archive container image as a tarball
+     docker_image:
+       name: myapp:1.0
+       archive_path: /tmp/prod:1.0.tar
+       source: pull
+       state: present
+       timeout: 600
+   - name: Copy .tar file from remote host to local host
+     synchronize:  src={{ item }} dest=./ mode=pull
+     with_items:
+      - "/tmp/prod:1.0.tar"
