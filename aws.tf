@@ -31,7 +31,7 @@ resource "aws_instance" "prod" {
   ami           = "ami-00399ec92321828f5"
   instance_type = "t2.nano"
   key_name = "id_rsa_pub"
-  vpc_security_group_ids = ["${aws_security_group.build_allow_ssh.id}"]
+  vpc_security_group_ids = ["${aws_security_group.prod_allow_ssh_web.id}"]
   tags = {
     Name = "ProdInstance"
   }
