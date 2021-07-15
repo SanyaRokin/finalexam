@@ -157,13 +157,13 @@
       src: ./prodimage:1.0.tar
       dest: /tmp/prodimage:1.0.tar
       
-  - name: load container from tarball
+  - name: Load container from tarball
     docker_image:
       name: prodimage:1.0.tar
       load_path: /tmp/prodimage:1.0.tar
       state: present
       
-  - name: load image
+  - name: Start prodimage
     docker_container:
       name: prodimage
       image: prodimage:1.0
