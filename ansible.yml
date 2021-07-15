@@ -82,16 +82,9 @@
        - git
        - maven
        - default-jdk
-       - python3-pip
+       - docker.io
        state: present
-       
-   - name: Installing docker
-     pip:
-       state: latest
-       name: 
-       - docker
-       executable: /usr/bin/pip3
-       
+             
    - name: Ensure git java is present
      git:
        repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
