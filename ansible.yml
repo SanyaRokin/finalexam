@@ -94,7 +94,7 @@
  
    - name: copy Dockerfile
      copy:
-       src: ./
+       src: ./dockerfile
        dest: /tmp/box/
        owner: root
        group: root
