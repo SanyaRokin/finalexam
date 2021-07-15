@@ -85,12 +85,12 @@
        - python3-pip
        state: present
        
-    - name: Installing docker
-      pip:
-        state: latest
-        name: 
-        - docker
-        executable: /usr/bin/pip3
+   - name: Installing docker
+     pip:
+       state: latest
+       name: 
+       - docker
+       executable: /usr/bin/pip3
        
    - name: Ensure git java is present
      git:
