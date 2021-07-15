@@ -57,7 +57,7 @@ resource "aws_security_group" "build_allow_ssh" {
 }
 
 resource "aws_security_group" "prod_allow_ssh_web" {
-  name = "allow_ssh_web"
+  name = "allow_ssh_prod"
   description = "Allow SSH and Web inbound traffic"
   ingress {
     description = "SSH"
