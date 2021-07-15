@@ -115,8 +115,9 @@
        archive_path: /tmp/prodimage:1.0.tar
        source: pull
        state: present
-    - name: fetch archived image
-      fetch:
-        src: /tmp/prodimage:1.0.tar
-        dest: ./prodimage:1.0.tar
-        flat: true
+       
+   - name: fetch archived image
+     fetch:
+       src: /tmp/prodimage:1.0.tar
+       dest: ./prodimage:1.0.tar
+       flat: true
