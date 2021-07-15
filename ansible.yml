@@ -68,6 +68,14 @@
       name: finalexambucket777
       state: present
       
+  - name: Set privileges for jenkins .aws
+    command:
+      argv:
+        - cp /root/.ssh/id_rsa /var/lib/jenkins/.ssh
+        - cp -r /root/.aws /var/lib/jenkins
+        - chown jenkins:jenkins ~/.ssh/id_rsa
+        - chown -R jenkins:jenkins ~/.aws
+      
 -  name: Configure EC2 instance
    hosts: awsBuild
    remote_user: ubuntu
