@@ -113,5 +113,5 @@
        name: prodimage:1.0
        build:
           path: /tmp/box
-          source: build
+       source: build
        state: present
