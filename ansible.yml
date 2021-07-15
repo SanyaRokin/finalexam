@@ -114,4 +114,4 @@
        build:
           path: /tmp/box
           source: build
-        state: present
+       state: present
